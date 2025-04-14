@@ -20,21 +20,24 @@ export default function WeatherCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="bg-white rounded-lg shadow-md p-4 hover:scale-105 transition duration-300"
+      className="bg-black/40 backdrop-blur-lg rounded-lg p-6 border-2 border-purple-400 shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)]"
     >
-      <h2 className="text-xl font-semibold mb-2">{city}</h2>
+      <h2 className="text-2xl text-white text-center mt-4">{city}</h2>
       {icon ? (
         <img
           src={`https://openweathermap.org/img/wn/${icon}@2x.png`}
           alt={description ?? "weather"}
+          className="mx-auto"
         />
       ) : (
         <div className="w-20 h-20 bg-white/20 rounded-full mb-2" />
       )}
-      <h2 className="text-2xl font-semibold mt-4">
+      <p className="text-4xl font-bold text-white text-center">
         {temp && temp.toFixed(0)}°
-      </h2>
-      <p className="capitalize">{description ?? "No description"}</p>
+      </p>{" "}
+      <p className="text-sm text-purple-200 text-center capitalize">
+        {description ?? "No description"}
+      </p>
     </motion.div>
   );
 }

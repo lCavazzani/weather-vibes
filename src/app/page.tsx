@@ -87,7 +87,7 @@ export default function Home() {
         <div className="flex justify-end mb-4">
           <button
             onClick={() => setUnit((prev) => (prev === "C" ? "F" : "C"))}
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+            className="text-sm font-bold text-purple-300 border border-purple-300 px-4 py-2 rounded hover:bg-purple-300 hover:text-black transition duration-300"
           >
             Switch to {unit === "C" ? "Fahrenheit" : "Celsius"}
           </button>
@@ -116,7 +116,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700 flex flex-col justify-center items-center gap-6 p-8">
+    <main className="min-h-screen bg-gradient-to-br from-[#2b0a3d] via-[#4a148c] to-[#ff8800] flex flex-col justify-center items-center gap-6 p-8">
       {renderContent()}
     </main>
   );
