@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 
 type WeatherCardProps = {
   city: string;
+  onRemove?: () => void;
   temp?: number;
   description?: string;
   icon?: string;
@@ -14,6 +15,7 @@ export default function WeatherCard({
   temp,
   description,
   icon,
+  onRemove,
 }: WeatherCardProps) {
   return (
     <motion.div
@@ -23,6 +25,15 @@ export default function WeatherCard({
       className="bg-black/40 backdrop-blur-lg rounded-lg p-6 border-2 border-purple-400 shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)]"
     >
       <h2 className="text-2xl text-white text-center mt-4">{city}</h2>
+      {onRemove && (
+        <button
+          onClick={onRemove}
+          className="absolute top-2 right-2 text-white hover:text-red-500 transition"
+          aria-label={`Remove ${city}`}
+        >
+          &#10005;
+        </button>
+      )}
       {icon ? (
         <img
           src={`https://openweathermap.org/img/wn/${icon}@2x.png`}

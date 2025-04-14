@@ -105,7 +105,9 @@ export default function Home() {
         </div>
       );
     }
-
+    const removeCard = (cityName: string) => {
+      setWeather((prev) => prev.filter((data) => data.name !== cityName));
+    };
     return (
       <>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -123,6 +125,7 @@ export default function Home() {
                 temp={displayTemp}
                 description={firstWeather?.description}
                 icon={firstWeather?.icon}
+                onRemove={() => removeCard(data.name)}
               />
             );
           })}
