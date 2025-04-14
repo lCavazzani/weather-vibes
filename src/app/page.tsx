@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import WeatherCard from "../components/WeatherCard";
+import WeatherCardSkeleton from "@/components/WeatherCardSkeleton";
 
 const cities = [
   { name: "Calgary", lat: 51.0447, lon: -114.0719 },
@@ -21,6 +22,12 @@ export default function Home() {
   const [weather, setWeather] = useState<WeatherData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [unit, setUnit] = useState<"C" | "F">("C");
+
+  // Helper to convert Celsius to Fahrenheit if needed.
+  const convertTemperature = (temp: number, unit: "C" | "F"): number => {
+    return unit === "F" ? Math.round((temp * 9) / 5 + 32) : temp;
+  };
 
   const fetchWeather = () => {
     setLoading(true);
@@ -52,7 +59,13 @@ export default function Home() {
 
   const renderContent = () => {
     if (loading) {
-      return <p className="text-white text-lg">Loading weather data...</p>;
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <WeatherCardSkeleton />
+          <WeatherCardSkeleton />
+          <WeatherCardSkeleton />
+        </div>
+      );
     }
 
     if (error) {
@@ -69,22 +82,41 @@ export default function Home() {
       );
     }
 
-    return weather.map((data) => {
-      const firstWeather = data.weather?.[0];
-      return (
-        <WeatherCard
-          key={data.name}
-          city={data.name}
-          temp={data.main?.temp ? Math.round(data.main.temp) : undefined}
-          description={firstWeather?.description}
-          icon={firstWeather?.icon}
-        />
-      );
-    });
+    return (
+      <>
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={() => setUnit((prev) => (prev === "C" ? "F" : "C"))}
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+          >
+            Switch to {unit === "C" ? "Fahrenheit" : "Celsius"}
+          </button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {weather.map((data) => {
+            const firstWeather = data.weather?.[0];
+            const originalTemp = data.main?.temp;
+            const displayTemp =
+              originalTemp !== undefined
+                ? convertTemperature(originalTemp, unit)
+                : undefined;
+            return (
+              <WeatherCard
+                key={data.name}
+                city={data.name}
+                temp={displayTemp}
+                description={firstWeather?.description}
+                icon={firstWeather?.icon}
+              />
+            );
+          })}
+        </div>
+      </>
+    );
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700 flex flex-wrap justify-center items-center gap-6 p-8">
+    <main className="min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700 flex flex-col justify-center items-center gap-6 p-8">
       {renderContent()}
     </main>
   );

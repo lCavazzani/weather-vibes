@@ -1,5 +1,6 @@
 // components/WeatherCard.tsx
 import React from "react";
+import { motion } from "framer-motion";
 
 type WeatherCardProps = {
   city: string;
@@ -15,7 +16,12 @@ export default function WeatherCard({
   icon,
 }: WeatherCardProps) {
   return (
-    <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg text-white flex flex-col items-center w-64">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="bg-white rounded-lg shadow-md p-4 hover:scale-105 transition duration-300"
+    >
       <h2 className="text-xl font-semibold mb-2">{city}</h2>
       {icon ? (
         <img
@@ -25,10 +31,10 @@ export default function WeatherCard({
       ) : (
         <div className="w-20 h-20 bg-white/20 rounded-full mb-2" />
       )}
-      <p className="text-4xl font-bold">
-        {typeof temp === "number" ? `${temp}°C` : "N/A"}
-      </p>
+      <h2 className="text-2xl font-semibold mt-4">
+        {temp && temp.toFixed(0)}°
+      </h2>
       <p className="capitalize">{description ?? "No description"}</p>
-    </div>
+    </motion.div>
   );
 }
