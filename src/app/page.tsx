@@ -14,6 +14,10 @@ const initialCities = [
 
 type WeatherData = {
   name: string;
+  coord: {
+    lon: number;
+    lat: number;
+  };
   main?: { temp?: number };
   weather?: { description?: string; icon?: string }[];
 };
@@ -122,6 +126,8 @@ export default function Home() {
               <WeatherCard
                 key={data.name}
                 city={data.name}
+                lat={data.coord.lat}
+                lon={data.coord.lon}
                 temp={displayTemp}
                 description={firstWeather?.description}
                 icon={firstWeather?.icon}
