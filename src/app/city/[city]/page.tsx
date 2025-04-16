@@ -1,8 +1,8 @@
 // app/city/[city]/page.tsx
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { apiKey } from "@/helper";
 import Image from "next/image";
+import { apiKey } from "@/helper";
 import ImageGenerator from "@/components/ImageGenerator";
 
 type DetailedWeatherData = {
@@ -21,18 +21,15 @@ type feelingResponse = {
   prompt: string;
 };
 
-interface CityDetailProps {
-  params: { city: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
 export default async function CityDetail({
   params,
   searchParams,
-}: CityDetailProps) {
-  // 1. await both before using
-  const { city } = await Promise.resolve(params);
-  const { lat, lon } = await Promise.resolve(searchParams);
+}: {
+  params: Promise<{ city: string }>;
+  searchParams: Promise<{ lat?: string; lon?: string }>;
+}) {
+  const { city } = await params;
+  const { lat, lon } = await searchParams;
 
   if (!lat || !lon) {
     return notFound();
@@ -87,11 +84,16 @@ export default async function CityDetail({
       <section className="bg-black/40 backdrop-blur-lg rounded-lg p-6 space-y-4">
         <div className="flex items-center space-x-4">
           {weatherData.weather?.[0]?.icon && (
-            <Image
-              src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
-              alt={weatherData.weather[0].description || "Weather Description"}
-              className="w-20 h-20"
-            />
+            <div className=" relative w-20 h-20">
+              <Image
+                src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
+                alt={
+                  weatherData.weather[0].description || "Weather Description"
+                }
+                layout="fill"
+                objectFit="contain"
+              />
+            </div>
           )}
           <div>
             <p className="text-3xl font-bold">{weatherData.main?.temp}&deg;C</p>

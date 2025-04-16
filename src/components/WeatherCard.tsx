@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 type WeatherCardProps = {
   city: string;
@@ -50,11 +51,14 @@ export default function WeatherCard({
           </button>
         )}
         {icon ? (
-          <img
-            src={`https://openweathermap.org/img/wn/${icon}@2x.png`}
-            alt={description ?? "weather"}
-            className="mx-auto"
-          />
+          <div className="relative w-20 h-20 mx-auto mb-2">
+            <Image
+              src={`https://openweathermap.org/img/wn/${icon}@2x.png`}
+              alt={description ?? "weather"}
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
         ) : (
           <div className="w-20 h-20 bg-white/20 rounded-full mb-2" />
         )}

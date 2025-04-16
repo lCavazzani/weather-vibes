@@ -76,12 +76,16 @@ export default function ImageGenerator({ prompt }: ImageGeneratorProps) {
       {error && <p className="mt-4 text-red-400 text-sm">{error}</p>}
 
       {imageUrl && (
-        <div className="mt-6 border-4 border-purple-400 rounded-lg overflow-hidden shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-          <Image
-            src={imageUrl}
-            alt="Generated feeling"
-            className="block w-full h-auto"
-          />
+        <div className="mt-6 border-4 border-purple-400 rounded-lg overflow-hidden shadow-[0_0_15px_rgba(255,255,255,0.5)] block w-full h-auto">
+          <div className="relative w-full h-64">
+            <Image
+              src={imageUrl}
+              alt="Generated feeling"
+              className="block w-full h-auto"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
         </div>
       )}
     </div>
