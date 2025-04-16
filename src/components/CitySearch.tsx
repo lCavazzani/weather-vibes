@@ -1,6 +1,4 @@
 // components/CitySearch.tsx
-"use client";
-
 import { apiKey } from "@/helper";
 import { useEffect, useRef, useState } from "react";
 

@@ -1,4 +1,3 @@
-"use client";
 // app/city/[city]/page.tsx
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -47,7 +46,8 @@ export default async function CityDetail({
   const weatherData: DetailedWeatherData = await weatherRes.json();
 
   // 3. call your own /api/generate endpoint
-  const genRes = await fetch(`/api/generate`, {
+  const base = process.env.NEXT_PUBLIC_BASE_URL!;
+  const genRes = await fetch(`${base}/api/generate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
