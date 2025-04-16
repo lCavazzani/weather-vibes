@@ -1,3 +1,4 @@
+// src/app/api/generate/route.ts
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -24,36 +25,59 @@ export async function POST(req: NextRequest) {
   const season = getSeason(lat, date);
 
   const prompt = `
-You're an assistant generating a "mood object" based on environment info. 
-The "mood" should be a full scenarios related to that location and mood. 
-"shortMood" just one or two words describing the person feelings
+You're an assistant generating a "feeling" based on environment info.
+The "feeling" should be a full scenario related to that location and how someone might feel.
+The "summaryFeeling" should be a brief summary of the overall feeling.
+"oneWordFeeling" should be just one or two simple words describing the person's feeling.
+The "feelingColor" should be a hex color code representing the feeling.
+youtubeSearchQuery should be a search query suitable for YouTube to find a relevant song.
 
 Location: ${location}
 Weather: ${weather}, ${temperature}°C
 Date: ${date}
 Season: ${season}
 
-Return JSON with:
+Return JSON with exactly:
 {
-  "mood": "...",
-  shortMood": "...",
-  "moodColor": "#...",
+  "feeling": "...",
+  "summaryFeeling": "...",
+  "oneWordFeeling": "...",
+  "feelingColor": "#...",
   "song": {
     "title": "...",
     "artist": "...",
-    "youtubeLink": "..."
+    "youtubeSearchQuery": "..."
   },
-  "image_prompt": "..."
+  "prompt": "..."
 }
 `;
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+    const responseText = await result.response.text();
 
-    const jsonMatch = responseText.match(/\{[\s\S]*?\}/);
-    const parsed = JSON.parse(jsonMatch?.[0] || "{}");
+    // 1) Find all {...} blocks
+    const matches = responseText.match(/\{[\s\S]+\}/g) || [];
+    // 2) Use the last match as the JSON
+    const jsonString = matches.pop() || "{}";
+
+    let parsed;
+    try {
+      parsed = JSON.parse(jsonString);
+    } catch (parseErr) {
+      console.error(
+        "Failed to parse JSON from Gemini:",
+        parseErr,
+        "\nRaw response:",
+        responseText
+      );
+      // Return the raw response for debugging, or a fallback
+      return NextResponse.json(
+        { error: "Failed to parse AI JSON", raw: responseText },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json(parsed);
   } catch (err) {
