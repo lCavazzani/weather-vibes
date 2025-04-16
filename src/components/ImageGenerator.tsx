@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
+import Image from "next/image";
 interface ImageGeneratorProps {
   prompt: string;
 }
@@ -29,9 +29,9 @@ export default function ImageGenerator({ prompt }: ImageGeneratorProps) {
 
       const { image_url } = await res.json();
       setImageUrl(image_url);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Image generation failed:", err);
-      setError(err.message || "Failed to generate image");
+      setError("Failed to generate image");
     } finally {
       setLoading(false);
     }
@@ -77,7 +77,7 @@ export default function ImageGenerator({ prompt }: ImageGeneratorProps) {
 
       {imageUrl && (
         <div className="mt-6 border-4 border-purple-400 rounded-lg overflow-hidden shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-          <img
+          <Image
             src={imageUrl}
             alt="Generated feeling"
             className="block w-full h-auto"

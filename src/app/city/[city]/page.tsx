@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { apiKey } from "@/helper";
+import Image from "next/image";
 import ImageGenerator from "@/components/ImageGenerator";
 
 type DetailedWeatherData = {
@@ -86,9 +87,9 @@ export default async function CityDetail({
       <section className="bg-black/40 backdrop-blur-lg rounded-lg p-6 space-y-4">
         <div className="flex items-center space-x-4">
           {weatherData.weather?.[0]?.icon && (
-            <img
+            <Image
               src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
-              alt={weatherData.weather[0].description}
+              alt={weatherData.weather[0].description || "Weather Description"}
               className="w-20 h-20"
             />
           )}
