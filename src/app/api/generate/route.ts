@@ -7,11 +7,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const mood = await generateMood(body);
     return NextResponse.json(mood);
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Generate API error:", err);
-    return NextResponse.json(
-      { error: err.message || "Generation failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Generation failed" }, { status: 500 });
   }
 }

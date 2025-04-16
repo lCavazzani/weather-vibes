@@ -46,8 +46,6 @@ export default async function CityDetail({
   }
   const weatherData: DetailedWeatherData = await weatherRes.json();
 
-  // 3. call your own /api/generate endpoint
-  const base = process.env.NEXT_PUBLIC_BASE_URL!;
   let moodData = null;
   try {
     moodData = await generateMood({
