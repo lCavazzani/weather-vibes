@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { apiKey } from "@/helper";
 import ImageGenerator from "@/components/ImageGenerator";
+import { generateMood } from "@/helper/generateMood";
 
 type DetailedWeatherData = {
   name: string;
@@ -47,26 +48,20 @@ export default async function CityDetail({
 
   // 3. call your own /api/generate endpoint
   const base = process.env.NEXT_PUBLIC_BASE_URL!;
-  const genRes = await fetch(`${base}/api/generate`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+  let moodData = null;
+  try {
+    moodData = await generateMood({
       location: city,
       weather: weatherData.weather?.[0]?.description ?? "",
       temperature: weatherData.main?.temp,
       lat: Number(lat),
       date: new Date().toISOString(),
-    }),
-    cache: "no-store", // always fresh
-  });
-
-  let feelingData: feelingResponse | null = null;
-  if (genRes.ok) {
-    feelingData = await genRes.json();
-  } else {
-    console.error("Generate API failed:", genRes.status, await genRes.text());
-    // you could choose notFound() or render an inline error here
+    });
+  } catch (e) {
+    console.error("Mood generation failed:", e);
   }
+  let feelingData: feelingResponse | null = null;
+  feelingData = moodData;
 
   // 4. render everything
   return (
